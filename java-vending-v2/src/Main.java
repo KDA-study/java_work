@@ -25,15 +25,15 @@ public class Main {
                     break;
                 case 2:
                     System.out.println("2. 잔돈 반환");
-                    //productService.returnMoney();
+                    productService.returnMoney();
                     break;
                 case 3:
                     System.out.println("3. 메뉴 선택");
-                    //productService.buyProduct();
+                    productService.buyProduct();
                     break;
                 case 4: // 관리자 메뉴
                     adminService.menu();
-                    //break;
+                    continue;
                 case 5:
                     System.out.println("종료합니다.");
                     return;

@@ -74,7 +74,9 @@ public class ProductService {
 
         // 모두 통과하면 잔액에서 가격을 빼고 재고를 1 줄인 뒤 출력
         VendingRepository.balance = VendingRepository.balance - VendingRepository.products[productIndex].getPrice();
-        System.out.println("%s 출력 완료, 남은 돈 : %,d, 재고 : %d".formatted(VendingRepository.products[productIndex].getName(),VendingRepository.balance,VendingRepository.products[productIndex].getStock()));
+        int remainStock = VendingRepository.products[productIndex].getStock() - 1;
+        VendingRepository.products[productIndex].setStock(remainStock);
+        System.out.println("%s 출력 완료, 남은 돈 : %,d, 재고 : %d".formatted(VendingRepository.products[productIndex].getName(), VendingRepository.balance, VendingRepository.products[productIndex].getStock()));
 
     }
 

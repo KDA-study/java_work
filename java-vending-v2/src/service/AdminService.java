@@ -1,6 +1,7 @@
 package service;
 
 import repository.VendingRepository;
+import vo.Product;
 
 import java.util.Scanner;
 
@@ -28,12 +29,15 @@ public class AdminService {
                     break;
                 case 2:
 //                    System.out.println("2. 메뉴 삭제");
+                    deleteProduct();
                     break;
                 case 3:
 //                    System.out.println("3. 메뉴 수정");
+                    updateProduct();
                     break;
                 case 4:
 //                    System.out.println("4. 재고 등록");
+                    addStock();
                     break;
                 case 5:
 //                    System.out.println("5. 전체목록보기");
@@ -65,13 +69,14 @@ public class AdminService {
             return;
         }
 
-        VendingRepository.products[emptyIndex].setName(name);
         System.out.println("==== 제품의 가격을 입력하세요. ====");
         int price = sc.nextInt();
-        VendingRepository.products[emptyIndex].setPrice(price);
         System.out.println("==== 제품의 재고를 입력하세요. ====");
         int stock = sc.nextInt();
-        VendingRepository.products[emptyIndex].setStock(stock);
+
+        // Product 타입 생성
+        Product p = new Product(name, price, stock);
+        VendingRepository.products[emptyIndex] = p;
 
 
     }
@@ -79,17 +84,79 @@ public class AdminService {
     // 제품명을 입력받아 그 칸을 null로 비우기
     public void deleteProduct() {
         System.out.println("[AdminService.deleteProduct()]");
+        if (productService.isEmpty()) {
+            System.out.println("현재 자판기에 상품이 없습니다.");
+            return;
+        }
+        // 제품 목록 보여주기
+        productService.printAll();
+        System.out.println("==== 삭제할 제품의 이름을 입력하세요. ====");
+        String name = sc.next();
+
+        int productIndex = productService.findIndex(name);
+        if (productIndex == -1) {
+            System.out.println("없는 제품입니다.");
+            return;
+        }
+
+        VendingRepository.products[productIndex] = null;
+
 
     }
 
     // 이름, 가격, 재고를 새 값으로 덮어쓰기
     public void updateProduct() {
         System.out.println("[AdminService.updateProduct()]");
+        if (productService.isEmpty()) {
+            System.out.println("현재 자판기에 상품이 없습니다.");
+            return;
+        }
+        // 제품 목록 보여주기
+        productService.printAll();
+        System.out.println("==== 수정할 제품의 이름을 입력하세요. ====");
+        String name = sc.next();
+
+        int productIndex = productService.findIndex(name);
+        if (productIndex == -1) {
+            System.out.println("없는 제품입니다.");
+            return;
+        }
+
+        System.out.println("==== 제품의 새 이름을 입력하세요. ====");
+        String newName = sc.next();
+        VendingRepository.products[productIndex].setName(newName);
+
+        System.out.println("==== 제품의 새 가격을 입력하세요. ====");
+        int newPrice = sc.nextInt();
+        VendingRepository.products[productIndex].setPrice(newPrice);
+
+        System.out.println("==== 제품의 새 재고를 입력하세요. ====");
+        int newStock = sc.nextInt();
+        VendingRepository.products[productIndex].setStock(newStock);
     }
 
     // 입력한 수량을 기존 재고에 더하기
     public void addStock() {
         System.out.println("[AdminService.addStock()]");
+        if (productService.isEmpty()) {
+            System.out.println("현재 자판기에 상품이 없습니다.");
+            return;
+        }
+        // 제품 목록 보여주기
+        productService.printAll();
+        System.out.println("==== 재고를 더할 제품의 이름을 입력하세요. ====");
+        String name = sc.next();
+
+        int productIndex = productService.findIndex(name);
+        if (productIndex == -1) {
+            System.out.println("없는 제품입니다.");
+            return;
+        }
+
+        System.out.println("==== 더할 재고를 숫자로 입력하세요. ====");
+        int addStock = sc.nextInt();
+        addStock = VendingRepository.products[productIndex].getStock() + addStock;
+        VendingRepository.products[productIndex].setStock(addStock);
     }
 
     // 비어 있는(null) 첫 칸 번호, 없으면 -1 (등록할 때만 사용)
